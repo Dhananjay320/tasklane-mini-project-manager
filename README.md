@@ -6,7 +6,7 @@ A small project-management web app. Sign up, create projects, break them into ta
 
 | | |
 |---|---|
-| **Live demo** | `TODO: https://<app>.vercel.app` (log in with `demo@tasklane.dev` / `demo12345`) |
+| **Run locally** | [Setup](#setup): two commands with an in-memory database, or a local MongoDB. Demo login `demo@tasklane.dev` / `demo12345` |
 | **Designs** | [Claude Design canvas](https://claude.ai/artifact/3EY4yPDHRQg72TB6nUCUxh) (clickable prototype of every screen) |
 | **Feature spec** | [`docs/FEATURES.md`](docs/FEATURES.md) |
 
@@ -75,12 +75,18 @@ npm run dev               # → http://localhost:3000
 ```
 The first `dev:memory` run downloads a MongoDB binary (one time, about 1–2 minutes). Data is lost when it stops.
 
-### Option B: with your own MongoDB (Atlas or local)
+### Option B: with a local MongoDB (data is kept)
+
+Use an installed MongoDB (default `mongodb://127.0.0.1:27017`). If you don't have one, `npm run db:local` starts a real MongoDB server on port 27017 with data saved in `server/.data`. It reuses the MongoDB binary the test setup downloads, so there's nothing to install.
 
 ```bash
 cd server
-cp .env.example .env      # set MONGODB_URI and JWT_SECRET
 npm install
+npm run db:local          # only if MongoDB isn't installed; leave it running in its own terminal
+
+# in another terminal
+cd server
+cp .env.example .env      # MONGODB_URI is already the local default; set JWT_SECRET
 npm run seed              # optional: adds the demo account and sample projects
 npm run dev               # → http://localhost:4000
 
@@ -90,7 +96,7 @@ npm install
 npm run dev               # → http://localhost:3000
 ```
 
-**MongoDB Atlas (free):** create an M0 cluster, add a database user, allow your IP under *Network Access* (`0.0.0.0/0` for a hosted API), then copy the connection string into `MONGODB_URI` with `/tasklane` as the database name.
+**MongoDB Atlas instead of local (free, needed only for a hosted deploy):** create an M0 cluster, add a database user, allow your IP under *Network Access* (`0.0.0.0/0` for a hosted API), then copy the connection string into `MONGODB_URI` with `/tasklane` as the database name.
 
 ### Environment variables
 

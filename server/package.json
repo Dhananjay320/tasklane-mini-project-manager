@@ -10,7 +10,8 @@
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
     "dev:memory": "node src/dev-memory.js",
-    "seed": "node src/seed-cli.js"
+    "seed": "node src/seed-cli.js",
+    "db:local": "node src/local-db.js"
   },
   "keywords": [],
   "author": "",
