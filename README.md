@@ -6,7 +6,9 @@ A small project-management web app. Sign up, create projects, break them into ta
 
 | | |
 |---|---|
-| **Run locally** | [Setup](#setup): two commands with an in-memory database, or a local MongoDB. Demo login `demo@tasklane.dev` / `demo12345` |
+| **Live demo** | https://tasklane-web.onrender.com (log in with `demo@tasklane.dev` / `demo12345`, or create an account). Free hosting sleeps when idle, so the first load can take about a minute |
+| **API** | https://tasklane-api-bllt.onrender.com/api/health |
+| **Run locally** | [Setup](#setup): two commands with an in-memory database, or a local MongoDB |
 | **Designs** | [Claude Design canvas](https://claude.ai/artifact/3EY4yPDHRQg72TB6nUCUxh) (clickable prototype of every screen) |
 | **Feature spec** | [`docs/FEATURES.md`](docs/FEATURES.md) |
 
@@ -167,8 +169,8 @@ curl -b jar "localhost:4000/api/projects"
 1. **Database:** MongoDB Atlas → free M0 cluster → add a database user → *Network Access* `0.0.0.0/0` → copy the connection string and add the database name: `mongodb+srv://USER:PASS@cluster.xxxxx.mongodb.net/tasklane?retryWrites=true&w=majority`.
 2. **Render:** New → *Blueprint* → this repo. [`render.yaml`](render.yaml) creates two free web services:
    - `tasklane-api` (root `server`): paste `MONGODB_URI`. `JWT_SECRET` is generated, and `SEED_DEMO=true` creates the demo account on first start.
-   - `tasklane-web` (root `client`): set `API_URL` to the API's URL, e.g. `https://tasklane-api.onrender.com`.
-3. If `API_URL` was filled in after the first web deploy, run *Manual Deploy* on `tasklane-web` once (the proxy target is read at build time).
+   - `tasklane-web` (root `client`): set `API_URL` to the API's URL as shown on its Render page (Render adds a suffix if the name is taken, e.g. `https://tasklane-api-bllt.onrender.com`).
+3. If `API_URL` changes, save it with *Save, rebuild, and deploy* (the proxy target is read at build time).
 
 The frontend can also go on Vercel instead: set *Root Directory* to `client` and the same `API_URL`.
 
