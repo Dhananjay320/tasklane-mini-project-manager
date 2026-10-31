@@ -1,4 +1,5 @@
-# Render blueprint for the API (free web service). The web app goes on Vercel; see README › Deploy.
+# Render blueprint: New → Blueprint → this repo. Deploys the API and the web app as two free web services.
+# You fill in MONGODB_URI (MongoDB Atlas) and, after the first deploy, API_URL (the API's public URL).
 services:
   - type: web
     name: tasklane-api
@@ -9,9 +10,28 @@ services:
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
+      - key: NODE_VERSION
+        value: "22"
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      # Creates the demo account (demo@tasklane.dev / demo12345) on start if it doesn't exist yet.
+      - key: SEED_DEMO
+        value: "true"
+
+  - type: web
+    name: tasklane-web
+    runtime: node
+    plan: free
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # The API's public URL, e.g. https://tasklane-api.onrender.com (free services can't use Render's private network).
+      - key: API_URL
+        sync: false

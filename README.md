@@ -162,10 +162,14 @@ curl -b jar "localhost:4000/api/projects"
 - **Validation:** zod schemas on the API (field-level messages back to the form) plus light client-side checks for instant feedback.
 - **Security basics:** bcrypt (cost 12), helmet headers, 100 kB body limit, login/sign-up rate limit, same error for wrong email and wrong password, no password hash ever returned (`select: false`).
 
-## Deploy (free tiers)
+## Deploy (free: Render + MongoDB Atlas)
 
-1. **Database:** MongoDB Atlas M0 → copy the connection string.
-2. **API on Render:** New → *Blueprint* → this repo (uses `render.yaml`), or a Web Service with root `server`, build `npm ci --omit=dev`, start `npm start`. Set `MONGODB_URI`; `JWT_SECRET` is generated. Optionally run `npm run seed` once from your machine against the same `MONGODB_URI`.
-3. **Web on Vercel:** import the repo, set *Root Directory* to `client`, add env `API_URL=https://<your-api>.onrender.com` (and optionally the same `JWT_SECRET`).
+1. **Database:** MongoDB Atlas → free M0 cluster → add a database user → *Network Access* `0.0.0.0/0` → copy the connection string and add the database name: `mongodb+srv://USER:PASS@cluster.xxxxx.mongodb.net/tasklane?retryWrites=true&w=majority`.
+2. **Render:** New → *Blueprint* → this repo. [`render.yaml`](render.yaml) creates two free web services:
+   - `tasklane-api` (root `server`): paste `MONGODB_URI`. `JWT_SECRET` is generated, and `SEED_DEMO=true` creates the demo account on first start.
+   - `tasklane-web` (root `client`): set `API_URL` to the API's URL, e.g. `https://tasklane-api.onrender.com`.
+3. If `API_URL` was filled in after the first web deploy, run *Manual Deploy* on `tasklane-web` once (the proxy target is read at build time).
 
-Render's free API sleeps after 15 minutes idle, so the first request after a pause can take about 30–50 seconds.
+The frontend can also go on Vercel instead: set *Root Directory* to `client` and the same `API_URL`.
+
+Render's free services sleep after 15 minutes without traffic, so the first visit after a pause takes about a minute.
